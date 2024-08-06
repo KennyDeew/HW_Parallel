@@ -12,27 +12,28 @@ namespace HW_Parallel
         static void Main(string[] args)
         {
             Console.WriteLine("Start");
-            long[] array = GenerateArray(100000000);
+            long[] array = GenerateArray(1000000000);
 
 
-            Calculator calculator = new Calculator();
+            SimpleCalculator calculator1 = new SimpleCalculator();
+            ParallelCalculator calculator2 = new ParallelCalculator(2);
+            PlinqCalculator calculator3 = new PlinqCalculator(2);
             Stopwatch stopwatch = new Stopwatch();
+
             stopwatch.Start();
-            long SumOfArray = calculator.GetSumAsSequential(array);
+            long SumOfArray = calculator1.GetSum(array);
             stopwatch.Stop();
             Console.WriteLine($"Sum - {SumOfArray} Time - {stopwatch.ElapsedMilliseconds}");
 
+            stopwatch.Restart();
+            long ThreadResult = calculator2.GetSum(array);
+            stopwatch.Stop();
+            Console.WriteLine($"Sum - {ThreadResult} Time - {stopwatch.ElapsedMilliseconds}");
 
             stopwatch.Restart();
-            var AsyncResult = calculator.GetSumAsync(array, 10);
+            var PlinqResult = calculator3.GetSum(array);
             stopwatch.Stop();
-            long result = AsyncResult.Result;
-            Console.WriteLine($"Sum - {result} Time - {stopwatch.ElapsedMilliseconds}");
-
-            stopwatch.Restart();
-            var ParallelResult = calculator.GetSumAsParallel(array, 5);
-            stopwatch.Stop();
-            Console.WriteLine($"Sum - {ParallelResult} Time - {stopwatch.ElapsedMilliseconds}");
+            Console.WriteLine($"Sum - {PlinqResult} Time - {stopwatch.ElapsedMilliseconds}");
         }
 
         private static long[] GenerateArray(int ArrayLength)
