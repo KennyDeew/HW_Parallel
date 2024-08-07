@@ -12,12 +12,12 @@
         /// <returns></returns>
         public long GetSum(long[] longArray)
         {
-            long Sum = 0;
+            var result = 0l;
             foreach (long intValue in longArray)
             {
-                Sum += intValue;
+                result += intValue;
             }
-            return Sum;
+            return result;
         }
     }
 }

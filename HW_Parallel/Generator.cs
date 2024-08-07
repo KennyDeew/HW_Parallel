@@ -4,13 +4,13 @@
     {
         public static long[] GenerateLongArray(int arrayCount)
         {
-            long[] array = new long[arrayCount];
-            Random random = new Random();
+            var longArray = new long[arrayCount];
+            var random = new Random();
             for (int i = 0; i < arrayCount; i++)
             {
-                array[i] = random.Next();
+                longArray[i] = random.Next();
             }
-            return array;
+            return longArray;
         }
     }
 }

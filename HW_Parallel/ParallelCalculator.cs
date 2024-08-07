@@ -7,27 +7,27 @@ namespace HW_Parallel
         /// <summary>
         /// Макс кол-во паралелльных потоков
         /// </summary>
-        private int ThreadNumber { get; }
+        private int _threadCount { get; }
 
         public ParallelCalculator(int threadNumber) 
-        {  
-            ThreadNumber = threadNumber; 
+        {
+            _threadCount = threadNumber; 
         }
 
         public long GetSum(long[] longArray)
         {
-            var AsyncResult = GetSumAsync(longArray);
-            return AsyncResult.Result;
+            var asyncResult = GetSumAsync(longArray);
+            return asyncResult.Result;
         }
 
         private async Task<long> GetSumInPartArray(long[] longArray, int startIndex, int finishIndex)
         {
-            long Sum = 0;
+            var sumOfPartArray = 0l;
             for (int i = startIndex; i < finishIndex; i++)
             {
-                Sum += longArray[i];
+                sumOfPartArray += longArray[i];
             }
-            return Sum;
+            return sumOfPartArray;
         }
 
         /// <summary>
@@ -37,15 +37,15 @@ namespace HW_Parallel
         /// <returns></returns>
         private async Task<long> GetSumAsync(long[] longArray)
         {
-            List<Task<long>> paralleltasks = new List<Task<long>>();
-            for (int i = 0; i < ThreadNumber; i++)
+            var parallelTasks = new List<Task<long>>();
+            for (int i = 0; i < _threadCount; i++)
             {
-                int startIndex = i * longArray.Length / ThreadNumber;
-                int finishIndex = startIndex + longArray.Length / ThreadNumber;
-                paralleltasks.Add(GetSumInPartArray(longArray, startIndex, finishIndex));
+                var startIndex = i * longArray.Length / _threadCount;
+                var finishIndex = startIndex + longArray.Length / _threadCount;
+                parallelTasks.Add(GetSumInPartArray(longArray, startIndex, finishIndex));
             }
-            long[] SpacesCountArr = await Task.WhenAll(paralleltasks);
-            return SpacesCountArr.Sum();
+            var partsArr = await Task.WhenAll(parallelTasks);
+            return partsArr.Sum();
         }
     }
 }

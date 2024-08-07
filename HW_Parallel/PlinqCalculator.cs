@@ -6,11 +6,11 @@ namespace HW_Parallel
         /// <summary>
         /// Макс кол-во паралелльных потоков
         /// </summary>
-        private int ThreadNumber { get; }
+        private int _threadCount { get; }
 
-        public PlinqCalculator(int threadNumber)
+        public PlinqCalculator(int threadCount)
         {
-            ThreadNumber = threadNumber;
+            _threadCount = threadCount;
         }
 
         /// <summary>
@@ -20,8 +20,7 @@ namespace HW_Parallel
         /// <returns></returns>
         public long GetSum(long[] longArray)
         {
-            long result = longArray.AsParallel().WithMergeOptions(ParallelMergeOptions.AutoBuffered).WithDegreeOfParallelism(ThreadNumber).Sum();
-            return result;
+            return longArray.AsParallel().WithMergeOptions(ParallelMergeOptions.AutoBuffered).WithDegreeOfParallelism(_threadCount).Sum();
         }
     }
 }

@@ -15,27 +15,27 @@ namespace HW_Parallel
         {
             GetEnvironmentInfo();
 
-            long[] array = Generator.GenerateLongArray(100000000);
+            var longAarray = Generator.GenerateLongArray(100000000);
 
-            SimpleCalculator calculator1 = new SimpleCalculator();
-            ParallelCalculator calculator2 = new ParallelCalculator(2);
-            PlinqCalculator calculator3 = new PlinqCalculator(2);
+            var simpleCalculator = new SimpleCalculator();
+            var parallelCalculator = new ParallelCalculator(2);
+            var plinqCalculator = new PlinqCalculator(2);
             Stopwatch stopwatch = new Stopwatch();
 
             stopwatch.Start();
-            long SumOfArray = calculator1.GetSum(array);
+            var sumOfLongArray = simpleCalculator.GetSum(longAarray);
             stopwatch.Stop();
-            Console.WriteLine($"Sum (Simple) - {SumOfArray} Time - {stopwatch.ElapsedMilliseconds}");
+            Console.WriteLine($"Sum (Simple) - {sumOfLongArray} Time - {stopwatch.ElapsedMilliseconds}");
 
             stopwatch.Restart();
-            long ThreadResult = calculator2.GetSum(array);
+            sumOfLongArray = parallelCalculator.GetSum(longAarray);
             stopwatch.Stop();
-            Console.WriteLine($"Sum (Parallel) - {ThreadResult} Time - {stopwatch.ElapsedMilliseconds}");
+            Console.WriteLine($"Sum (Parallel) - {sumOfLongArray} Time - {stopwatch.ElapsedMilliseconds}");
 
             stopwatch.Restart();
-            var PlinqResult = calculator3.GetSum(array);
+            sumOfLongArray = plinqCalculator.GetSum(longAarray);
             stopwatch.Stop();
-            Console.WriteLine($"Sum (PLINQ) - {PlinqResult} Time - {stopwatch.ElapsedMilliseconds}");
+            Console.WriteLine($"Sum (PLINQ) - {sumOfLongArray} Time - {stopwatch.ElapsedMilliseconds}");
         }
 
         private static void GetEnvironmentInfo()
