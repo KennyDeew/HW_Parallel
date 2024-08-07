@@ -1,4 +1,6 @@
 ﻿using System.Diagnostics;
+using System.Management;
+using System;
 
 namespace HW_Parallel
 {
@@ -11,9 +13,9 @@ namespace HW_Parallel
 
         static void Main(string[] args)
         {
-            Console.WriteLine("Start");
-            long[] array = GenerateArray(1000000000);
+            GetEnvironmentInfo();
 
+            long[] array = Generator.GenerateLongArray(100000000);
 
             SimpleCalculator calculator1 = new SimpleCalculator();
             ParallelCalculator calculator2 = new ParallelCalculator(2);
@@ -23,28 +25,27 @@ namespace HW_Parallel
             stopwatch.Start();
             long SumOfArray = calculator1.GetSum(array);
             stopwatch.Stop();
-            Console.WriteLine($"Sum - {SumOfArray} Time - {stopwatch.ElapsedMilliseconds}");
+            Console.WriteLine($"Sum (Simple) - {SumOfArray} Time - {stopwatch.ElapsedMilliseconds}");
 
             stopwatch.Restart();
             long ThreadResult = calculator2.GetSum(array);
             stopwatch.Stop();
-            Console.WriteLine($"Sum - {ThreadResult} Time - {stopwatch.ElapsedMilliseconds}");
+            Console.WriteLine($"Sum (Parallel) - {ThreadResult} Time - {stopwatch.ElapsedMilliseconds}");
 
             stopwatch.Restart();
             var PlinqResult = calculator3.GetSum(array);
             stopwatch.Stop();
-            Console.WriteLine($"Sum - {PlinqResult} Time - {stopwatch.ElapsedMilliseconds}");
+            Console.WriteLine($"Sum (PLINQ) - {PlinqResult} Time - {stopwatch.ElapsedMilliseconds}");
         }
 
-        private static long[] GenerateArray(int ArrayLength)
+        private static void GetEnvironmentInfo()
         {
-            long[] array = new long[ArrayLength];
-            Random random = new Random();
-            for (int i = 0; i < ArrayLength; i++)
+            ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT * FROM Win32_Processor");
+            foreach (ManagementObject obj in searcher.Get())
             {
-                array[i] = random.Next();
+                Console.WriteLine("Processor Name: " + obj["Name"]);
             }
-            return array;
+            Console.WriteLine("ОС: " + Environment.OSVersion);
         }
     }
 }
